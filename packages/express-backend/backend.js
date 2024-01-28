@@ -1,3 +1,5 @@
+// npm run dev to start localhost
+
 import express from "express";
 
 const app = express();
@@ -43,12 +45,15 @@ const users = {
       }
     ]
   };
-  
+
   const findUserByName = (name) => {
     return users["users_list"].filter(
       (user) => user["name"] === name
     );
   };
+  // http://localhost:8000/users?name=Mac will return
+  // {"users_list":[{"id":"abc123","name":"Mac","job":"Bouncer"},{"id":"ppp222","name":"Mac","job":"Professor"}]}
+
   
   app.get("/users", (req, res) => {
     const name = req.query.name;
@@ -73,3 +78,16 @@ app.get("/users/:id", (req, res) => {
     res.send(result);
   }
 });
+// http://localhost:8000/users/zap555 will return
+//{"id":"zap555","name":"Dennis","job":"Waiter"}
+
+const addUser = (user) => {
+    users["users_list"].push(user);
+    return user;
+  };
+  
+  app.post("/users", (req, res) => {
+    const userToAdd = req.body;
+    addUser(userToAdd);
+    res.send();
+  });
