@@ -83,12 +83,44 @@ app.get("/users/:id", (req, res) => {
 //{"id":"zap555","name":"Dennis","job":"Waiter"}
 
 const addUser = (user) => {
-    users["users_list"].push(user);
-    return user;
-  };
+  const randomId = generateRandomId();
+  user.id = randomId;
+  users["users_list"].push(user);
+  return user;
+};
+
+const generateRandomId = () => {
+  // Generate a random 6-character ID
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomId = '';
+  for (let i = 0; i < 6; i++) {
+    randomId += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return randomId;
+};
+
+const deleteUserById = (id) => {
+  const index = users["users_list"].findIndex((user) => user.id === id);
+  if (index !== -1) {
+    const deletedUser = users["users_list"].splice(index, 1)[0];
+    return deletedUser;
+  } else {
+    return null; 
+  }
+};
+
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  const deletedUser = deleteUserById(id);
+
+  if (deletedUser) {
+    res.status(204).send(); 
+  } else {
+    res.status(404).send("Resource not found.");
+  }
+});
   
   app.post("/users", (req, res) => {
     const userToAdd = req.body;
-    addUser(userToAdd);
-    res.send();
+    res.status(201).json(addUser(userToAdd));
   });
