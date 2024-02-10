@@ -5,13 +5,13 @@ import Form from "./Form";
 function MyApp() {
   const [characters, setCharacters] = useState([]);
   
-  function removeOneCharacter(id) {
-    fetch(`http://localhost:8000/users/${id}`, {
+  function removeOneCharacter(_id) {
+    fetch(`http://localhost:8000/users/${_id}`, {
       method: 'DELETE',
     })
     .then((res) => {
       if (res.status === 204) {
-        const updated = characters.filter((character) => character.id !== id);
+        const updated = characters.filter((character) => character._id !== _id);
         setCharacters(updated);
       } else if (res.status === 404) {
         console.log("Resource not found.");
